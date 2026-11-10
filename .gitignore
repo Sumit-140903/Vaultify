@@ -1,5 +1,5 @@
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,33 +7,33 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependencies and builds
+node_modules/
+dist/
+dist-ssr/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
 # Environment secrets
 .env
 .env.*
 !.env.example
-
-# Backend environment secrets
 backend/.env
 backend/.env.*
 !backend/.env.example
 
-# Private uploaded documents
-backend/private_uploads/
+# Vercel configuration
+.vercel/
+backend/.vercel/
 
 # Private uploaded documents
 backend/private_uploads/
