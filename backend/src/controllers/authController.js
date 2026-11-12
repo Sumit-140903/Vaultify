@@ -6,14 +6,14 @@ import {
   verifyEmailOtp,
 } from "../services/otpService.js";
 
-const createToken = (userId) =>
+export const createToken = (userId) =>
   jwt.sign(
     { sub: userId.toString() },
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
   );
 
-const publicUser = (user) => ({
+export const publicUser = (user) => ({
   id: user._id.toString(),
   name: user.name,
   email: user.email,

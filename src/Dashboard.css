@@ -1256,3 +1256,119 @@ button:disabled { opacity: .6; cursor: wait; }
   user-select: all;
 }
 
+/* Wallet details popover */
+.wallet-menu-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.wallet-popover {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 30;
+  width: min(320px, calc(100vw - 32px));
+  padding: 17px;
+  border: 1px solid #30405d;
+  border-radius: 13px;
+  background: #101a2c;
+  color: #dce7fa;
+  box-shadow: 0 15px 45px #0008;
+}
+
+.wallet-popover-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.wallet-popover-heading strong {
+  font-size: 13px;
+}
+
+.wallet-status-connected,
+.wallet-status-disconnected {
+  padding: 5px 8px;
+  border-radius: 20px;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.wallet-status-connected {
+  background: #123c32;
+  color: #67e0b2;
+}
+
+.wallet-status-disconnected {
+  background: #3d2d1c;
+  color: #ffc77a;
+}
+
+.wallet-detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.wallet-detail-label {
+  color: #8292ae;
+  font-size: 10px;
+}
+
+.wallet-detail-group strong {
+  color: #dce7fa;
+  font-size: 11px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.wallet-copy-button,
+.wallet-disconnect-button,
+.wallet-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 35px;
+  margin-bottom: 9px;
+  padding: 8px 10px;
+  border: 1px solid #304b70;
+  border-radius: 8px;
+  background: #192d49;
+  color: #c6dcff;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.wallet-copy-button:hover,
+.wallet-close-button:hover {
+  background: #243e62;
+}
+
+.wallet-copy-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.wallet-disconnect-button {
+  border-color: #704044;
+  background: #351e2a;
+  color: #ffb5b5;
+}
+
+.wallet-disconnect-button:hover {
+  background: #482633;
+}
+
+.wallet-close-button {
+  margin-top: 3px;
+  margin-bottom: 0;
+  border-color: #30405d;
+  background: transparent;
+  color: #9aabc5;
+}

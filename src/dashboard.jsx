@@ -380,6 +380,7 @@ useEffect(() => {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [toast, setToast] = useState("");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showWalletMenu, setShowWalletMenu] = useState(false);
  
 const [walletAddress, setWalletAddress] = useState("");
 const [walletChainId, setWalletChainId] = useState("");
@@ -646,6 +647,7 @@ function disconnectWallet() {
   setWalletAddress("");
   setWalletChainId("");
   setShowProfileMenu(false);
+  setShowWalletMenu(false);
 
   notify(
     "Wallet disconnected from Vaultify. Your verified wallet association is preserved."
@@ -2526,7 +2528,10 @@ function renderVerification() {
             <button
               className="profile-menu-button"
               aria-label="Open profile menu"
-              onClick={() => setShowProfileMenu((current) => !current)}
+              onClick={() => {
+  setShowProfileMenu((current) => !current);
+  setShowWalletMenu(false);
+}}
             >
               <MoreHorizontal size={20} />
             </button>
@@ -2618,18 +2623,97 @@ function renderVerification() {
 
             <div className="topbar-divider" />
 
-            <button
-              className="wallet-connect-button"
-              onClick={connectWallet}
-              disabled={walletBusy}
-            >
-              <Wallet size={16} />
-              {walletBusy
-                ? "Connecting..."
-                : walletAddress
-                  ? `${walletAddress.slice(0, 5)}...${walletAddress.slice(-4)}`
-                  : "Connect wallet"}
-            </button>
+            <div className="wallet-menu-wrap">
+  <button
+    type="button"
+    className="wallet-connect-button"
+    aria-haspopup="true"
+    aria-expanded={showWalletMenu}
+    onClick={() => {
+      if (isWalletConnected) {
+        setShowProfileMenu(false);
+        setShowWalletMenu((current) => !current);
+      } else {
+        setShowWalletMenu(false);
+        connectWallet();
+      }
+    }}
+    disabled={walletBusy}
+  >
+    <Wallet size={16} />
+    {walletBusy
+      ? "Connecting..."
+      : isWalletConnected
+        ? `${associatedWalletAddress.slice(0, 6)}...${associatedWalletAddress.slice(-4)}`
+        : associatedWalletAddress
+          ? "Reconnect wallet"
+          : "Connect wallet"}
+  </button>
+
+  {showWalletMenu && (
+    <div className="wallet-popover" role="dialog" aria-label="Wallet details">
+      <div className="wallet-popover-heading">
+        <strong>Wallet details</strong>
+        <span className={isWalletConnected ? "wallet-status-connected" : "wallet-status-disconnected"}>
+          {walletConnectionStatus}
+        </span>
+      </div>
+
+      <div className="wallet-detail-group">
+        <span className="wallet-detail-label">Associated wallet</span>
+        <strong className="wallet-address-value">
+          {associatedWalletAddress || "No wallet associated"}
+        </strong>
+      </div>
+
+      <button
+        type="button"
+        className="wallet-copy-button"
+        disabled={!associatedWalletAddress}
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(associatedWalletAddress);
+            notify("Wallet address copied.");
+          } catch (error) {
+            notify("Unable to copy wallet address.");
+          }
+        }}
+      >
+        Copy wallet address
+      </button>
+
+      <div className="wallet-detail-group">
+        <span className="wallet-detail-label">Network</span>
+        <strong>
+          {walletChainId === "0xaa36a7"
+            ? "Ethereum Sepolia Testnet"
+            : walletChainId
+              ? `Unsupported network (${walletChainId})`
+              : "Not connected"}
+        </strong>
+      </div>
+
+      {isWalletConnected && (
+        <button
+          type="button"
+          className="wallet-disconnect-button"
+          onClick={disconnectWallet}
+        >
+          <Wallet size={15} />
+          Disconnect from Vaultify
+        </button>
+      )}
+
+      <button
+        type="button"
+        className="wallet-close-button"
+        onClick={() => setShowWalletMenu(false)}
+      >
+        Close
+      </button>
+    </div>
+  )}
+</div>
           </div>
         </header>
 

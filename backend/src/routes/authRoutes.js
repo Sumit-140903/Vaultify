@@ -7,7 +7,10 @@ import {
   login,
   getCurrentUser,
 } from "../controllers/authController.js";
-
+import {
+  createWalletLoginChallenge,
+  verifyWalletLogin,
+} from "../controllers/walletLoginController.js";
 import { requireAuth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -42,7 +45,25 @@ const loginLimiter = rateLimit({
     message: "Too many failed login attempts. Please try again after 15 minutes.",
   },
 });
+const walletLoginChallengeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    message: "Too many wallet login challenges. Please try again later.",
+  },
+});
 
+const walletLoginVerifyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    message: "Too many wallet login attempts. Please try again later.",
+  },
+});
 // Registration
 router.post(
   "/register/email-otp",
@@ -62,7 +83,18 @@ router.post(
   loginLimiter,
   login
 );
+// Password-free login using an already-associated MetaMask wallet.
+router.post(
+  "/wallet-login/challenge",
+  walletLoginChallengeLimiter,
+  createWalletLoginChallenge
+);
 
+router.post(
+  "/wallet-login/verify",
+  walletLoginVerifyLimiter,
+  verifyWalletLogin
+);
 // Protected current-user endpoint
 router.get("/me", requireAuth, getCurrentUser);
 
